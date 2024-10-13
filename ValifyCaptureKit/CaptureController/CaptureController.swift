@@ -11,6 +11,7 @@ import AVFoundation
 public class CaptureController: UIViewController {
     
     // MARK: - Properties
+    internal var delegate: ValifyCaptureRouter
     internal var session: AVCaptureSession?
     private let previewLayer = AVCaptureVideoPreviewLayer()
     private let output = AVCapturePhotoOutput()
@@ -26,6 +27,15 @@ public class CaptureController: UIViewController {
         return button
     }()
     
+    // MARK: - Init
+    public init(delegate: ValifyCaptureRouter) {
+        self.delegate = delegate
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: - Life Cycle
     public override func viewDidLoad() {

@@ -23,13 +23,7 @@ extension CaptureController: AVCapturePhotoCaptureDelegate {
         }
         
         session?.stopRunning()
-        
-        let image = UIImage(data: data)
-        let imageView = UIImageView(image: image)
-        
-        imageView.contentMode = .scaleAspectFill
-        imageView.frame = view.bounds
-        
-        view.addSubview(imageView)
+        navigationController?.popViewController(animated: true)
+        delegate.didCaptureSelfie(data)
     }
 }
