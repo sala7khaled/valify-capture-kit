@@ -43,13 +43,13 @@ public class CaptureController: UIViewController {
         setupUI()
         checkCameraPermission()
     }
-//    
-//    public override func viewWillAppear(_ animated: Bool) {
-//        super.viewWillAppear(animated)
-//        if session?.isRunning == false {
-//            
-//        }
-//    }
+    
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if session == nil {
+            setupCamera() // Initialize camera session when the view appears
+        }
+    }
     
     public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -67,7 +67,6 @@ public class CaptureController: UIViewController {
         session = nil
     }
     
-    
     // MARK: - Methods
     private func setupUI() {
         view.backgroundColor = .black
@@ -83,28 +82,26 @@ public class CaptureController: UIViewController {
     
     private func checkCameraPermission() {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
-            
         case .notDetermined:
             AVCaptureDevice.requestAccess(for: .video) { isGranted in
-                guard isGranted else { return }
-                
                 DispatchQueue.main.async {
-                    self.setupCamera()
+                    if isGranted {
+                        self.setupCamera()
+                    } else {
+                        self.showAlert(title: "Permission Denied", message: "Camera access is required.")
+                    }
                 }
             }
-        case .restricted:
-            break
-        case .denied:
-            break
         case .authorized:
-            break
+            setupCamera()
+        case .denied, .restricted:
+            showAlert(title: "Permission Denied", message: "Camera access is required.")
         default:
             break
         }
     }
     
     private func setupCamera() {
-        
         guard session == nil else { return }
         let session = AVCaptureSession()
         
@@ -120,13 +117,11 @@ public class CaptureController: UIViewController {
                 
                 previewLayer.videoGravity = .resizeAspectFill
                 previewLayer.session = session
+                self.session = session
                 
-                // Start session on a background thread
                 DispatchQueue.global(qos: .userInitiated).async {
                     session.startRunning()
                 }
-                
-                self.session = session
             } catch {
                 print("Error setting up the camera: \(error.localizedDescription)")
                 showAlert(title: "Camera Error", message: "Failed to setup the camera.")
@@ -141,13 +136,14 @@ public class CaptureController: UIViewController {
             self.present(alert, animated: true, completion: nil)
         }
     }
-
-    
     
     // MARK: - Actions
     @objc private func didClickShutterButton() {
-        output.capturePhoto(with: AVCapturePhotoSettings(),
-                            delegate: self)
+        guard let session = session, session.isRunning else {
+            showAlert(title: "Error", message: "Camera session is not running.")
+            return
+        }
+        output.capturePhoto(with: AVCapturePhotoSettings(), delegate: self)
     }
-
+    
 }
