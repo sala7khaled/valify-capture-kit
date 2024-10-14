@@ -13,8 +13,8 @@ Valify Capture Kit is a lightweight and powerful Cocoa Touch framework designed 
 
 - [x] **Selfie Camera Integration:** Provides a customizable selfie camera interface using `AVFoundation`.
 - [x] **Delegate-Based Image Handling:** Sent back to the host application through a delegate for further processing.
-- [x] **Efficient and Lightweight:** Designed for optimal performance, ensuring smooth capture and submission of images.
-- [x] **[Valify Capture Demo](https://github.com/sala7khaled/valify-capture-demo):** A demo app has been created to showcase how the framework can be integrated and used.
+- [x] **Efficient and Lightweight:** For optimal performance, ensuring smooth capture and submission of images.
+- [x] **[Valify Capture Demo](https://github.com/sala7khaled/valify-capture-demo):** A demo app has been created to showcase how the framework can be integrated.
 
 <br>
 <be>
